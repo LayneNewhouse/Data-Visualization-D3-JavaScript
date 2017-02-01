@@ -3,13 +3,115 @@
 <head>
   <meta charset="utf-8">
   <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://dimplejs.org/dist/dimple.v2.0.0.min.js"></script>
+
   <style>
-    /* css style code here */
+
+    h2 {
+        text-align: center;
+    }
   </style>
+   
+  <button id="btn">Click Me</button>
+
   <script type="text/javascript">  
     function draw(data) {
 
+      /*
+        D3.js setup code
+      */
+
+      "use strict";
+      var margin = 75,
+          width = 1100 - margin, //from 1400
+          height = 600 - margin;
+
+      d3.select("body")
+        .append("h2")
+        .text("Baseball Dataset")
+
+      var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width + margin)
+        .attr("height", height + margin)
+        .append('g')
+        .attr('class','chart');
+
+      d3.select('svg')
+          .selectAll("circle")
+          .data(data)
+          .enter()
+          .append("circle")
+
+      //counting players by handedness
+      var lCount = 0;
+      var bCount = 0;
+      var rCount = 0;
+
+      for (var i = 0; i < data.length; i++) {
+        var hand = data[i].handedness;
+        if (hand === "R") {
+          rCount += 1;
+        } else if (hand === "L") {
+          lCount += 1;
+        } else{
+          bCount += 1;
+        }
+      }
+      //adding counts back into the data
+      for (var i = 0; i < data.length; i++) {
+        var hand = data[i].handedness;
+        if (hand === "R") {
+          data[i].handcount = rCount;
+        } else if (hand === "L") {
+          data[i].handcount = lCount;
+        } else{
+          data[i].handcount = bCount;
+        }
+      }
+
+      /*
+        Dimple.js Chart construction code
+      */
+
+      var myChart = new dimple.chart(svg, data);
+      myChart.setBounds(100,75,800,500)
+      var x = myChart.addMeasureAxis("x", "avg");
+      x.tickFormat = ",.3f";
+      var y = myChart.addMeasureAxis("y", "HR");
+
+      var z = myChart.addMeasureAxis("z", "handcount");
+      var mySeries = myChart.addSeries(["handedness"], dimple.plot.bubble);
+      mySeries.aggregate = dimple.aggregateMethod.avg
+      //var myLegend = myChart.addLegend(930, 100, 60, 300, "Right");
+
+      myChart.draw();
+
+      d3.select('#btn').on("click", function() {
+          x.overrideMin = 0.13;
+          x.overrideMax = 0.24;
+          y.overrideMax = 65;
+          y.overrideMin = 25;
+          myChart.draw(1000);
+      })
+
+      /*
+      svg.selectAll("title_text")
+          .data(["Click legend to","show/hide owners:"])
+          .enter()
+          .append("text")
+            .attr("x", 930)
+            .attr("y", function (d, i) { return 80 + i * 14; })
+            .style("font-family", "sans-serif")
+            .style("font-size", "10px")
+            .style("color", "Black")
+            .text(function (d) { return d; });
+      */
+
+
+
     };
+
   </script>
 </head>
 <body>
