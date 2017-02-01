@@ -49,7 +49,7 @@
       var rCount = 0;
 
       for (var i = 0; i < data.length; i++) {
-        var hand = data[i].handedness;
+        var hand = data[i].Handedness;
         if (hand === "R") {
           rCount += 1;
         } else if (hand === "L") {
@@ -60,14 +60,15 @@
       }
       //adding counts back into the data
       for (var i = 0; i < data.length; i++) {
-        var hand = data[i].handedness;
+        var hand = data[i].Handedness;
         if (hand === "R") {
-          data[i].handcount = rCount;
+          data[i].PlayersByHand = rCount;
         } else if (hand === "L") {
-          data[i].handcount = lCount;
+          data[i].PlayersByHand = lCount;
         } else{
-          data[i].handcount = bCount;
+          data[i].PlayersByHand = bCount;
         }
+        data[i].TotalPlayers = rCount+lCount+bCount;
       }
 
       /*
@@ -76,22 +77,30 @@
 
       var myChart = new dimple.chart(svg, data);
       myChart.setBounds(100,75,800,500)
-      var x = myChart.addMeasureAxis("x", "avg");
+      var x = myChart.addMeasureAxis("x", "BattingAverage");
       x.tickFormat = ",.3f";
-      var y = myChart.addMeasureAxis("y", "HR");
-
-      var z = myChart.addMeasureAxis("z", "handcount");
-      var mySeries = myChart.addSeries(["handedness"], dimple.plot.bubble);
+      x.overrideMin = 0.13;
+      x.overrideMax = 0.24;
+      var y = myChart.addMeasureAxis("y", "HomeRuns");
+      y.overrideMax = 65;
+      y.overrideMin = 25;
+      var z = myChart.addMeasureAxis("z", "TotalPlayers");
+      var mySeries = myChart.addSeries("Null", dimple.plot.bubble);
+      myChart.addSeries("Null", dimple.plot.line);
       mySeries.aggregate = dimple.aggregateMethod.avg
       //var myLegend = myChart.addLegend(930, 100, 60, 300, "Right");
 
       myChart.draw();
 
       d3.select('#btn').on("click", function() {
-          x.overrideMin = 0.13;
-          x.overrideMax = 0.24;
-          y.overrideMax = 65;
-          y.overrideMin = 25;
+          myChart.series.forEach(function(series){
+              series.shapes.remove();
+          });
+
+          myChart.axes.splice(2,1);
+          var z = myChart.addMeasureAxis("z", "PlayersByHand");
+          var mySeries = myChart.addSeries(["Handedness"], dimple.plot.bubble);
+          mySeries.aggregate = dimple.aggregateMethod.avg
           myChart.draw(1000);
       })
 
