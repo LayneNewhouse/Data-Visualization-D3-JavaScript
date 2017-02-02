@@ -44,12 +44,15 @@
           .enter()
           .append("circle")
 
-      //counting players by handedness
+      //tallying players by facet
       var lCount = 0;
       var bCount = 0;
       var rCount = 0;
+      var nCount = 0;
+      var oCount = 0;
 
       for (var i = 0; i < data.length; i++) {
+
         var hand = data[i].Handedness;
         if (hand === "R") {
           rCount += 1;
@@ -58,24 +61,41 @@
         } else{
           bCount += 1;
         }
+
+        var bmi = 703*data[i].weight/(data[i].height*data[i].height);
+        if (bmi < 25) {
+          data[i].BMI = "Normal Weight";
+          nCount += 1;
+        } else {
+          data[i].BMI = "Overweight";
+          oCount += 1;
+        }
+
       }
       //adding counts back into the data
       for (var i = 0; i < data.length; i++) {
         var hand = data[i].Handedness;
         if (hand === "R") {
           data[i].PlayersByHand = rCount;
-          data[i].Handedness = "Right";
+          data[i].Handedness = "Right Handed";
         } else if (hand === "L") {
           data[i].PlayersByHand = lCount;
-          data[i].Handedness = "Left";
-        } else{
+          data[i].Handedness = "Left Handed";
+        } else {
           data[i].PlayersByHand = bCount;
-          data[i].Handedness = "Both";
+          data[i].Handedness = "Switch Hitter";
         }
-        data[i].TotalPlayers = rCount+lCount+bCount;
+
+        var bmi = data[i].BMI
+        if (bmi === "Overweight") {
+          data[i].PlayersByBMI = oCount;
+        } else {
+          data[i].PlayersByBMI = nCount;
+        }
+
+        data[i].TotalPlayers = Math.sqrt(rCount+lCount+bCount);
         //can use Math.sqrt on counts
       }
-
       /*
         Dimple.js Chart construction code
       */
@@ -84,12 +104,13 @@
       myChart.setBounds(100,75,800,450)
       var x = myChart.addMeasureAxis("x", "BattingAverage");
       x.tickFormat = ",.3f";
-      x.overrideMin = 0.13;
-      x.overrideMax = 0.24;
+      x.overrideMin = 0.15;
+      x.overrideMax = 0.22;
       var y = myChart.addMeasureAxis("y", "HomeRuns");
       y.overrideMax = 65;
       y.overrideMin = 25;
       var z = myChart.addMeasureAxis("z", "TotalPlayers");
+      z.tickFormat = ",.f";
       var mySeries = myChart.addSeries(null, dimple.plot.bubble);
       mySeries.aggregate = dimple.aggregateMethod.avg
       myChart.draw();
@@ -100,22 +121,43 @@
           //});
           myChart.axes.splice(2,1);
           var z = myChart.addMeasureAxis("z", "PlayersByHand");
+          z.overrideMax = 1157;
+          z.tickFormat = ",.f";
           var mySeries = myChart.addSeries(["Handedness"], dimple.plot.bubble);
           mySeries.aggregate = dimple.aggregateMethod.avg
-          var myLegend = myChart.addLegend(930, 100, 60, 300, "Right");
+          var myLegend = myChart.addLegend(950, 100, 60, 300, "Right");
           myChart.draw(1000);
 
-          svg.selectAll("title_text")
-          .data(["Click legend to","show/hide owners:"])
-          .enter()
-          .append("text")
-            .attr("x", 930)
-            .attr("y", function (d, i) { return 80 + i * 14; })
-            .style("font-family", "sans-serif")
-            .style("font-size", "10px")
-            .style("color", "Black")
-            .text(function (d) { return d; });
+          
       })
+
+      d3.select('#btn2').on("click", function() {
+          //myChart.series.forEach(function(series){
+          //    series.shapes.remove();
+          //});
+          myChart.axes.splice(2,1);
+          var z = myChart.addMeasureAxis("z", "PlayersByBMI");
+          z.overrideMax = 1157;
+          z.tickFormat = ",.f";
+          var mySeries = myChart.addSeries(["BMI"], dimple.plot.bubble);
+          mySeries.aggregate = dimple.aggregateMethod.avg
+          var myLegend = myChart.addLegend(950, 100, 60, 300, "Right");
+          myChart.draw(1000);
+
+          
+      })
+
+      /*
+      svg.selectAll("title_text")
+            .data(["Click legend to","show/hide owners:"])
+            .enter()
+            .append("text")
+              .attr("x", 930)
+              .attr("y", function (d, i) { return 80 + i * 14; })
+              .style("font-family", "sans-serif")
+              .style("font-size", "10px")
+              .style("color", "Black")
+              .text(function (d) { return d; }); */
 
     };
 
