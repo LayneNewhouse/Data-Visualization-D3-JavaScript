@@ -8,10 +8,10 @@ After analyzing the visualization we can see that left handed hitters, and hitte
 Interestingly we can see that switch hitters have the highest batting average but the lowest average number of home runs.
 
 Design - 
-I decided to use grouped averages because I felt that scatter plot of all of the individual player was both distracting and provided little insight.
+I decided to use grouped averages because I felt that a scatter plot of all of the individual player was both distracting and provided little insight.
 After getting feedback from friend 'A' I grouped the variables height and weight together as BMI as this would give a better understanding of the player's body type.
 I also decided to keep the original average on the graph so it could be used as a comparison (From Friend 'B').
-Initially I was going to toggle that stats on the Y-axis but friend 'C' advised me to put the other stat on the x-axis and use colors to distinguish facets. 
+Initially I was going to toggle that stats on the Y-axis but friend 'C' advised me to place the stats on both the x and y axis and use colors to distinguish facets. 
 
 Feedback - 
 - maintain original averages
