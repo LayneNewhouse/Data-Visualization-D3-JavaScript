@@ -12,7 +12,8 @@
     }
   </style>
    
-  <button id="btn">Click Me</button>
+  <button id="btn">Handedness</button>
+  <button id="btn2">BMI</button>
 
   <script type="text/javascript">  
     function draw(data) {
@@ -63,12 +64,16 @@
         var hand = data[i].Handedness;
         if (hand === "R") {
           data[i].PlayersByHand = rCount;
+          data[i].Handedness = "Right";
         } else if (hand === "L") {
           data[i].PlayersByHand = lCount;
+          data[i].Handedness = "Left";
         } else{
           data[i].PlayersByHand = bCount;
+          data[i].Handedness = "Both";
         }
         data[i].TotalPlayers = rCount+lCount+bCount;
+        //can use Math.sqrt on counts
       }
 
       /*
@@ -76,7 +81,7 @@
       */
 
       var myChart = new dimple.chart(svg, data);
-      myChart.setBounds(100,75,800,500)
+      myChart.setBounds(100,75,800,450)
       var x = myChart.addMeasureAxis("x", "BattingAverage");
       x.tickFormat = ",.3f";
       x.overrideMin = 0.13;
@@ -85,27 +90,22 @@
       y.overrideMax = 65;
       y.overrideMin = 25;
       var z = myChart.addMeasureAxis("z", "TotalPlayers");
-      var mySeries = myChart.addSeries("Null", dimple.plot.bubble);
-      myChart.addSeries("Null", dimple.plot.line);
+      var mySeries = myChart.addSeries(null, dimple.plot.bubble);
       mySeries.aggregate = dimple.aggregateMethod.avg
-      //var myLegend = myChart.addLegend(930, 100, 60, 300, "Right");
-
       myChart.draw();
 
       d3.select('#btn').on("click", function() {
-          myChart.series.forEach(function(series){
-              series.shapes.remove();
-          });
-
+          //myChart.series.forEach(function(series){
+          //    series.shapes.remove();
+          //});
           myChart.axes.splice(2,1);
           var z = myChart.addMeasureAxis("z", "PlayersByHand");
           var mySeries = myChart.addSeries(["Handedness"], dimple.plot.bubble);
           mySeries.aggregate = dimple.aggregateMethod.avg
+          var myLegend = myChart.addLegend(930, 100, 60, 300, "Right");
           myChart.draw(1000);
-      })
 
-      /*
-      svg.selectAll("title_text")
+          svg.selectAll("title_text")
           .data(["Click legend to","show/hide owners:"])
           .enter()
           .append("text")
@@ -115,9 +115,7 @@
             .style("font-size", "10px")
             .style("color", "Black")
             .text(function (d) { return d; });
-      */
-
-
+      })
 
     };
 
