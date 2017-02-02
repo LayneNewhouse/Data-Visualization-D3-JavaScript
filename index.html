@@ -8,8 +8,8 @@
   <style>
 
     h2 {
-        text-align: left;
-        padding-left: 450px;
+        text-align: center;
+        padding-right: 150px;
     }
 
     .button {
@@ -38,12 +38,16 @@
       */
       "use strict";
       var margin = 75,
-          width = 1100 - margin, //from 1400
-          height = 600 - margin;
+          width = 1600 - margin, //from 1400
+          height = 800 - margin;
 
       d3.select("body")
         .append("h2")
-        .text("Baseball Dataset")
+        .text("Major League Baseball Data from 1871 through 2014.")
+
+      d3.select("body")
+        .append("h2")  
+        .text("Does handedness or BMI affect hitting statistics?")
 
       var svg = d3.select("body")
         .append("svg")
@@ -113,23 +117,30 @@
 
       //creates a chart displaying total averages
       var myChart = new dimple.chart(svg, data);
-      myChart.setBounds(100,75,800,450)
-      var x = myChart.addMeasureAxis("x", "BattingAverage");
+      myChart.setBounds(100,75,1300,650)
+      var x = myChart.addMeasureAxis("x", "Batting Average");
       //override min and max were manually adjusted for clarity
       x.tickFormat = ",.3f";
       x.overrideMin = 0.15;
       x.overrideMax = 0.22;
-      var y = myChart.addMeasureAxis("y", "HomeRuns");
+      x.fontSize = "auto";
+
+      var y = myChart.addMeasureAxis("y", "Home Runs");
       y.overrideMax = 65;
       y.overrideMin = 25;
+      y.fontSize = "auto";
+
       var z = myChart.addMeasureAxis("z", "sqrtTotalPlayers");
       z.tickFormat = ",.1f";
+
       var mySeries = myChart.addSeries(null, dimple.plot.bubble);
       //averages players bating averages and home runs
       mySeries.aggregate = dimple.aggregateMethod.avg
-      var myLegend = myChart.addLegend(950, 100, 60, 300, "Right");
-      myChart.draw();
 
+      var myLegend = myChart.addLegend(1525, 100, 60, 300, "Right");
+      myLegend.fontSize = "auto";
+      myChart.draw();
+      debugger;
       //button variables to prevent overwriting without a proper reset
       var btn0Pushed = 0;
       var btn1Pushed = 0;
@@ -142,8 +153,10 @@
             var z = myChart.addMeasureAxis("z", "sqrtPlayersByHand");
             z.overrideMax = 34;
             z.tickFormat = ",.1f";
+
             var mySeries = myChart.addSeries(["Handedness"], dimple.plot.bubble);
             mySeries.aggregate = dimple.aggregateMethod.avg
+
             myChart.draw(1000);
             btn0Pushed = 1;
           }
@@ -158,8 +171,10 @@
             var z = myChart.addMeasureAxis("z", "sqrtPlayersByBMI");
             z.overrideMax = 34;
             z.tickFormat = ",.1f";
+
             var mySeries = myChart.addSeries(["BMI"], dimple.plot.bubble);
             mySeries.aggregate = dimple.aggregateMethod.avg
+
             myChart.draw(1000);
             btn1Pushed = 1;
           }
