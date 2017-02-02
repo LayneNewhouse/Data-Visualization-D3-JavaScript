@@ -94,22 +94,22 @@
       for (var i = 0; i < data.length; i++) {
         var hand = data[i].Handedness;
         if (hand === "R") {
-          data[i].sqrtPlayersByHand = Math.sqrt(rCount);
+          data[i]["Relative Size (Hand)"] = Math.sqrt(rCount);
           data[i].Handedness = "Right Handed";
         } else if (hand === "L") {
-          data[i].sqrtPlayersByHand = Math.sqrt(lCount);
+          data[i]["Relative Size (Hand)"] = Math.sqrt(lCount);
           data[i].Handedness = "Left Handed";
         } else {
-          data[i].sqrtPlayersByHand = Math.sqrt(bCount);
+          data[i]["Relative Size (Hand)"] = Math.sqrt(bCount);
           data[i].Handedness = "Switch Hitter";
         }
         var bmi = data[i].BMI
         if (bmi === "Overweight") {
-          data[i].sqrtPlayersByBMI = Math.sqrt(oCount);
+          data[i]["Relative Size (BMI)"] = Math.sqrt(oCount);
         } else {
-          data[i].sqrtPlayersByBMI = Math.sqrt(nCount);
+          data[i]["Relative Size (BMI)"] = Math.sqrt(nCount);
         }
-        data[i].sqrtTotalPlayers = Math.sqrt(rCount+lCount+bCount);
+        data[i]["Relative Size (Total)"] = Math.sqrt(rCount+lCount+bCount);
       }
       /*
         Dimple.js Chart construction code
@@ -130,7 +130,7 @@
       y.overrideMin = 25;
       y.fontSize = "auto";
 
-      var z = myChart.addMeasureAxis("z", "sqrtTotalPlayers");
+      var z = myChart.addMeasureAxis("z", "Relative Size (Total)");
       z.tickFormat = ",.1f";
 
       var mySeries = myChart.addSeries(null, dimple.plot.bubble);
@@ -150,7 +150,7 @@
           //displays bubbles for handedness facet
           if (btn0Pushed === 0) {
             myChart.axes.splice(2,1);
-            var z = myChart.addMeasureAxis("z", "sqrtPlayersByHand");
+            var z = myChart.addMeasureAxis("z", "Relative Size (Hand)");
             z.overrideMax = 34;
             z.tickFormat = ",.1f";
 
@@ -168,7 +168,7 @@
           //displays bubbles for BMI facet
           if (btn1Pushed === 0) {
             myChart.axes.splice(2,1);
-            var z = myChart.addMeasureAxis("z", "sqrtPlayersByBMI");
+            var z = myChart.addMeasureAxis("z", "Relative Size (BMI)");
             z.overrideMax = 34;
             z.tickFormat = ",.1f";
 

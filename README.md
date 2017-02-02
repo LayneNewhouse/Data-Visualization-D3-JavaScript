@@ -2,10 +2,10 @@
 Data Visualization with D3.js and Dimple.js
 
 Summary - 
-This data visualization shows the average number of homeruns and batting average for a set of 1157 players.
-By clicking the buttons on the top left of the screen the view can group the data by the respective facet.
-This visualization demonstrates that, on average, left handed hitters and overweight, according to BMI, hitters hit more home runs and have higher batting averages than their counter-parts.
-The exception to this is the switch hitters who have the highest average batting average but very low home run averages.
+The baseball data is a subset of Lahman's Baseball Database which contains statistics for Major League Baseball from 1871 through 2014.
+This explanatory data visualization shows how BMI and handedness affect batting statistics.
+After analyzing the visualization we can see that left handed hitters, and hitters with higher BMI, tend to have a higher batting average and number of home runs.
+Interestingly we can see that switch hitters have the highest batting average but the lowest average number of home runs.
 
 Design - 
 I decided to use grouped averages because I felt that scatter plot of all of the individual player was both distracting and provided little insight.
@@ -18,6 +18,11 @@ Feedback -
 - use BMI instead of weight and height
 - proper labels on the axes
 - use the x and y axis for stats as opposed to using the x axis for categories
+Post Udacity Review:
+- increased font sizes for the legend and axes
+- added a more decriptive title
+- improved tooltip descriptions. As an example I changes "sqrtTotalPlayers" to "Relative Size (Total)"
+- increased the size of the overall visualization
 
 Resources - 
 dimplejs.org
